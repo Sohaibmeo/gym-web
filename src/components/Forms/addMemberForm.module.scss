@@ -1,0 +1,12 @@
+.outerGrid {
+    margin: 5% 3% 0 3% !important;
+    .innerLeftGrid {
+        .textfieldGrid{
+            margin-top: 2% !important;
+            margin-left: 5px !important;
+           .textfield {
+                width: -moz-available !important;
+           }
+        }
+    }
+}
