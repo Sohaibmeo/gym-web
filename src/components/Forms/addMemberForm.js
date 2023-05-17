@@ -50,8 +50,27 @@ const videoConstraints = {
           profilePicture: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async(values) => {
+      try {
+        const response = await fetch('http://localhost:8000/api/users/addUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          console.log('User added:', data);
+          // Handle successful response as needed
+        } else {
+          throw new Error('Request failed');
+        }
+      } catch (error) {
+        console.error('Error adding user:', error);
+        // Handle error response as needed
+      }
     },
   });
 
