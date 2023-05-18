@@ -12,6 +12,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 
+
+
 const videoConstraints = {
   width: 400,
   height: 400,
@@ -21,16 +23,9 @@ const videoConstraints = {
 
       const [picture, setPicture] = useState('');
       const webcamRef = React.useRef(null);
-    
-      const capture = React.useCallback(() => {
-        const pictureSrc = webcamRef.current.getScreenshot();
-        setPicture(pictureSrc);
-      }, []);
-    
       const retake = () => {
         setPicture('');
       };
-
       const formik = useFormik({
         initialValues: {
           email: 'foobar@gmail.com',
@@ -65,7 +60,8 @@ const videoConstraints = {
           console.log('User added:', data);
           // Handle successful response as needed
         } else {
-          throw new Error('Request failed');
+          const errorResponse = await response.json();
+          console.error('Error adding user:', errorResponse.error);
         }
       } catch (error) {
         console.error('Error adding user:', error);
@@ -73,7 +69,12 @@ const videoConstraints = {
       }
     },
   });
-
+  const capture = React.useCallback(() => {
+    const pictureSrc = webcamRef.current.getScreenshot();
+    setPicture(pictureSrc);
+    formik.setFieldValue('profilePicture', pictureSrc);
+  }, [formik]);
+  
   return (  
     <div>
       <form onSubmit={formik.handleSubmit} >

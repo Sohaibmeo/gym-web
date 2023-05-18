@@ -38,9 +38,15 @@ router.get('/allUsers', async (req, res) => {
 // POST /api/users
 router.post('/addUser', async (req, res) => {
   try {
-    const user = addUser(req.body);
-    user._id = user._id.toString(); // Convert ObjectId to string
-    res.json( user);
+    const user = await addUser(req.body);
+    if (!user.error){
+      console.log("Passing User Data back to front end")
+      user._id = user._id.toString(); // Convert ObjectId to string
+      res.json(user);
+    } else {
+      console.log("Passing Error code to front-end")
+      res.json({ error: user.error });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

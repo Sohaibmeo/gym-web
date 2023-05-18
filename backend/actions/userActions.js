@@ -9,7 +9,7 @@ const UserModel = require("../models/userModel");
       console.error('Error retrieving users:', error);
     });
 }
- const addUser = ({
+ const addUser = async({
     email,
     firstName,
     lastName,
@@ -42,15 +42,16 @@ const UserModel = require("../models/userModel");
         feeReceivingCheck: feeReceivingCheck,
         profilePicture: profilePicture,
       });
-      
-      newUser.save()
+
+      return await newUser.save()
         .then(savedUser => {
-          console.log('New user created:', savedUser);
+          console.log(`New user created: ${savedUser.firstName} ${savedUser.lastName} Email : ${savedUser.email}`);
+          return savedUser
         })
         .catch(error => {
-          console.error('Error creating user:', error);
+          console.error('Error creating user:', error.code);
+          return {error: error.code}
         });
-      return newUser
 }
  const findUserById= (userId) =>  {
     UserModel.findById(userId)
