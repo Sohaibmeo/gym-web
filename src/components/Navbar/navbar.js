@@ -55,15 +55,7 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'black',
-              textDecoration: 'none',
-            }}
+            className={styles.logoText}
           >
             XFitness
           </Typography>
@@ -129,13 +121,12 @@ function ResponsiveAppBar() {
               <Button
                 key={page.label}
                 onClick={() => handleNavigateMenu(page.label)}
-                sx={{ my: 2, color: 'white !important', display: 'block' }}
+                sx={{ my: 2, color: 'white !important', display: 'block' ,marginTop: '16px  !important', marginBottom: '16px !important'}}
               >
                 {page.name}
               </Button>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
