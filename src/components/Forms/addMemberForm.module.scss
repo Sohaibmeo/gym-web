@@ -1,12 +1,24 @@
 .outerGrid {
     margin-top: 5% !important;
     .innerLeftGrid {
-        .textfieldGrid{
-            margin-top: 2% !important;
-            margin-left: 5px !important;
-           .textfield {
-                width: -moz-available !important;
-           }
+        .gridContainer{
+            .textfieldGrid{
+                margin-top: 2% !important;
+                margin-left: 2% !important;
+               .textfield {
+                    width: -moz-available !important;
+               }
+            }
+        }
+    }
+    .innerRightGrid{
+        .webcam{
+            width: 90%;
+            margin-left: 5%;
+        }
+        .capturedWebcam{
+            width: 100%;
+            height: 100%;
         }
     }
 }
