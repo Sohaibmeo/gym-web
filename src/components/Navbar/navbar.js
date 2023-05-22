@@ -86,9 +86,6 @@ function ResponsiveAppBar() {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'flex', md: 'none' },
-              }}
             >
               {pages.map((page) => (
                 <ListItem key={page.label} className={styles.settingsMenuItems} onClick={() => handleNavigateMenu(page.label)}>
