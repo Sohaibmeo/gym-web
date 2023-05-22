@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import styles from './navbar.module.scss'
+import { Fade, ListItem } from '@mui/material';
 
 const pages = [{name: 'Announcements', label: 'announcement'}, {name: 'AddMember', label: 'addmember'}, {name: 'Attendance', label: 'attendance'}];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -55,12 +56,12 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             href="/"
-            className={styles.logoText}
+            className={styles.logoTextBigScreen}
           >
             XFitness
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box className={styles.menuTextHidden}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -86,15 +87,13 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'flex', md: 'none' },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.label} onClick={() => handleNavigateMenu(page.label)}>
-                   {/* <Link to={page.label} style={{ textDecoration: 'none' }}> */}
+                <ListItem key={page.label} className={styles.settingsMenuItems} onClick={() => handleNavigateMenu(page.label)}>
                     <Typography textAlign="center">{page.name}</Typography>
-                   {/* </Link> */}
-                </MenuItem>
+                </ListItem>
               ))}
             </Menu>
           </Box>
@@ -103,38 +102,28 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
+            className={styles.logoTextSmallScreen}
           >
             XFitness
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box className={styles.menuText} >
             {pages.map((page) => (
               <Button
                 key={page.label}
                 onClick={() => handleNavigateMenu(page.label)}
-                sx={{ my: 2, color: 'white !important', display: 'block' ,marginTop: '16px  !important', marginBottom: '16px !important'}}
+                className={styles.menuButton}
               >
                 {page.name}
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box className={styles.settingsIcon}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} >
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -142,21 +131,18 @@ function ResponsiveAppBar() {
                 horizontal: 'right',
               }}
               keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}   n             v                   
+              TransitionComponent={Fade}        
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
+              className={styles.settingsMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <ListItem key={setting} className={styles.settingsMenuItems} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                </ListItem>
               ))}
             </Menu>
-        
-            </Box>
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
