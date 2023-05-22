@@ -1,15 +1,25 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./components/Navbar/navbar";
-import AddMember from "./pages/addMember";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import AddMember from "./pages/AddMember";
+import Home from "./pages/Home";
+import Announcement from "./pages/Announcement";
+import Attendance from "./pages/Attendance";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 function App() {
   return (
-    <div>
-    <LocalizationProvider dateAdapter={AdapterDateFns} timezone="Asia/Kolkata">
-    <Navbar />
-    <AddMember />
-    </LocalizationProvider>
-    </div>
+    <Router>
+      <LocalizationProvider dateAdapter={AdapterDateFns} timezone="Asia/Kolkata">
+        <Navbar />
+        <Routes>
+          <Route exact path="/" Component={Home} />
+          <Route path="/announcement" Component={Announcement} />
+          <Route path="/addmember" Component={AddMember} />
+          <Route path="/attendance" Component={Attendance} />
+        </Routes>
+      </LocalizationProvider>
+    </Router>     
   );
 }
 

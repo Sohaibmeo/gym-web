@@ -12,11 +12,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 
-
-
 const videoConstraints = {
-  width: 400,
-  height: 400,
   facingMode: 'user',
 };
     export const MyForm = () => {
@@ -64,6 +60,7 @@ const videoConstraints = {
           console.error('Error adding user:', errorResponse.error);
         }
       } catch (error) {
+        console.log(error)
         console.error('Error adding user:', error);
         // Handle error response as needed
       }
@@ -78,7 +75,7 @@ const videoConstraints = {
   return (  
     <div>
       <form onSubmit={formik.handleSubmit} >
-      <Grid container spacing={2} className={styles.outerGrid}>
+      <Grid container className={styles.outerGrid}>
        <Grid item xs={7}  >
         <Grid container className={styles.innerLeftGrid}>
         <Grid item xs={5} className={styles.textfieldGrid}>
@@ -322,14 +319,11 @@ const videoConstraints = {
         </Grid>
         <Grid >
         <Grid item xs={12} >
-        <div>
       <Card>
         {picture === '' ? (
           <Webcam
             audio={false}
-            height={400}
             ref={webcamRef}
-            width={400}
             screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
           />
@@ -342,23 +336,25 @@ const videoConstraints = {
           />
         )}
       </Card>
-      <div className="mt-3 d-flex justify-content-center align-items-center">
-        {picture === '' ? (
-          <IconButton onClick={capture}>
-            <CameraAltIcon fontSize="large" />
-          </IconButton>
-        ) : (
-          <IconButton onClick={retake}>
-            <CameraAltIcon fontSize="large" color="secondary" />
-          </IconButton>
-        )}
-      </div>
-    </div>
         </Grid>
-        <Button color="primary" variant="contained" type="submit">
-          Submit
-        </Button></Grid>
+      <Grid className="mt-3 d-flex justify-content-center align-items-center">
+        {picture === '' ? (
+        <IconButton onClick={capture}>
+        <CameraAltIcon fontSize="large" />
+        </IconButton>
+        ) : (
+        <IconButton onClick={retake}>
+        <CameraAltIcon fontSizg1e="large" color="secondary" />
+        </IconButton>
+        )}
+        </Grid>
+        <Grid item>
+          <Button color="primary" variant="contained" type="submit">
+            Submit
+          </Button>
+        </Grid>
       </Grid>
+    </Grid>
       </form>
     </div>
   );
