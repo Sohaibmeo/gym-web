@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const cv = require('opencv4nodejs');
 // var Finder = require('fs-finder');
-const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
+const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT);
 
 const getFaceImage = (grayImg) => {
     const faceRects = classifier.detectMultiScale(grayImg).objects;

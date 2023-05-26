@@ -345,7 +345,7 @@ const videoConstraints = {
               </IconButton>
               ) : (
               <IconButton onClick={retake}>
-              <CameraAltIcon fontSizg1e="large" color="secondary" />
+              <CameraAltIcon fontSize="large" color="secondary" />
               </IconButton>
               )}
             <Button color="primary" variant="contained" type="submit">
