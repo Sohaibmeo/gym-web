@@ -7,7 +7,7 @@ import Webcam from 'react-webcam';
 import axios from 'axios';
 import { Button, Card, CardMedia, Checkbox, Grid, IconButton, MenuItem, TextField } from '@mui/material';
 import { CameraAlt } from '@mui/icons-material';
-
+import {toast} from 'react-toastify'
 
 const videoConstraints = {
   facingMode: 'user',
@@ -56,10 +56,12 @@ const videoConstraints = {
         if (response.ok) {
           const data = await response;
           console.log('User added:', data);
+          toast.success("User Added Succesfully!")
           // Handle successful response as needed
         } else {
           const errorResponse = await response.json();
           console.error('Error adding user:', errorResponse.error);
+          toast.error("Error adding User")
         }
       } catch (error) {
         console.log(error)
