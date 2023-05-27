@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import { Checkbox, Grid, MenuItem } from '@material-ui/core';
 import { DatePicker } from '@mui/x-date-pickers';
 import styles from './addMemberForm.module.scss'
 import {validationSchema} from '../YupValidations/addMembersValidations'
 import Webcam from 'react-webcam';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import axios from 'axios';
+import { Button, Card, CardMedia, Checkbox, Grid, IconButton, MenuItem, TextField } from '@mui/material';
+import { CameraAlt } from '@mui/icons-material';
+
 
 const videoConstraints = {
   facingMode: 'user',
@@ -53,13 +50,11 @@ const videoConstraints = {
         for (const key in values) {
           formData.append(key, values[key]);
         }
-        const response = await fetch('http://localhost:8000/api/users/addUser', {
-          method: 'POST',
-          body: formData,
-        });
+
+        const response = await axios.post('http://localhost:8000/api/users/addUser', formData);
     
         if (response.ok) {
-          const data = await response.json();
+          const data = await response;
           console.log('User added:', data);
           // Handle successful response as needed
         } else {
@@ -349,11 +344,11 @@ const videoConstraints = {
             <Grid item  >
               {picture === '' ? (
               <IconButton onClick={capture}>
-              <CameraAltIcon fontSize="large" />
+              <CameraAlt fontSize="large" />
               </IconButton>
               ) : (
               <IconButton onClick={retake}>
-              <CameraAltIcon fontSize="large" color="secondary" />
+              <CameraAlt fontSize="large" color="secondary" />
               </IconButton>
               )}
             <Button color="primary" variant="contained" type="submit">
