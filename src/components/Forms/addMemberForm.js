@@ -22,6 +22,11 @@ const videoConstraints = {
       const retake = () => {
         setPicture('');
       };
+      const base64ToBlob = async (base64String, type) => {
+        const response = await fetch(base64String);
+        const blob = await response.blob();
+        return blob;
+      };
       const formik = useFormik({
         initialValues: {
           email: 'foobar@gmail.com',
@@ -38,17 +43,19 @@ const videoConstraints = {
           weight: 100,
           dateOfAdmission: new Date(),
           feeReceivingCheck: false,
-          profilePicture: '',
+          profilePicture: null,
     },
     validationSchema: validationSchema,
     onSubmit: async(values) => {
       try {
+        const formData = new FormData();
+        // Append other values to the FormData object
+        for (const key in values) {
+          formData.append(key, values[key]);
+        }
         const response = await fetch('http://localhost:8000/api/users/addUser', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values),
+          body: formData,
         });
     
         if (response.ok) {
@@ -66,15 +73,16 @@ const videoConstraints = {
       }
     },
   });
-  const capture = React.useCallback(() => {
+  const capture = React.useCallback(async () => {
     const pictureSrc = webcamRef.current.getScreenshot();
     setPicture(pictureSrc);
-    formik.setFieldValue('profilePicture', pictureSrc);
+    const imageBlob = await base64ToBlob(pictureSrc, 'image/png');
+    formik.setFieldValue('profilePicture', imageBlob);
   }, [formik]);
-  
+  //
   return (  
     <div>
-      <form onSubmit={formik.handleSubmit} >
+      <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
         <Grid container className={styles.outerGrid}>
           <Grid item xs={7} className={styles.innerLeftGrid} >
           <Grid container className={styles.gridContainer}>

@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
-
+app.use('/uploads', express.static('uploads'));
 app.listen(8000, () => {
   console.log('Server is running on port 8000');
 });

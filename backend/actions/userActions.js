@@ -23,8 +23,8 @@ const UserModel = require("../models/userModel");
     weight,
     dateOfAdmission,
     feeReceivingCheck,
-    profilePicture
-}) => {
+},{profilePicture}) => {
+  console.log("Blob Data : ",profilePicture)
     const newUser = new UserModel({
         email: email,
         firstName: firstName,
@@ -42,7 +42,7 @@ const UserModel = require("../models/userModel");
         feeReceivingCheck: feeReceivingCheck,
         profilePicture: profilePicture,
       });
-
+      
       return await newUser.save()
         .then(savedUser => {
           console.log(`New user created: ${savedUser.firstName} ${savedUser.lastName} Email : ${savedUser.email}`);
