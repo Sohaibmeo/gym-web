@@ -62,7 +62,7 @@ router.post('/addUser',upload.single('profilePicture'), async (req, res) => {
         res.json(user);
       } else {
         console.log("Passing Error code to front-end")
-        res.json({ error: user.error });
+        res.status(500).json({ message: user.error });
       }
     }
   } catch (error) {

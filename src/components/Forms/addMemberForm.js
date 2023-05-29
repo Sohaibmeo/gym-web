@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { DatePicker } from '@mui/x-date-pickers';
 import styles from './addMemberForm.module.scss'
-import {validationSchema} from '../YupValidations/addMembersValidations'
+import {validationSchema} from '../Validations/addMembersValidations'
 import Webcam from 'react-webcam';
 import axios from 'axios';
 import { Button, Card, CardMedia, Checkbox, Grid, IconButton, MenuItem, TextField } from '@mui/material';
@@ -53,14 +53,12 @@ const videoConstraints = {
 
         const response = await axios.post('http://localhost:8000/api/users/addUser', formData);
     
-        if (response.ok) {
-          const data = await response;
-          console.log('User added:', data);
+        if (response.status === 200) {
+          console.log('User added:', response.data);
           toast.success("User Added Succesfully!")
           // Handle successful response as needed
         } else {
-          const errorResponse = await response.json();
-          console.error('Error adding user:', errorResponse.error);
+          console.error('Error adding user:',response.message);
           toast.error("Error adding User")
         }
       } catch (error) {

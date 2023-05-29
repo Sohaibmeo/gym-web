@@ -24,7 +24,6 @@ const UserModel = require("../models/userModel");
     dateOfAdmission,
     feeReceivingCheck,
 },{profilePicture}) => {
-  console.log("Blob Data : ",profilePicture)
     const newUser = new UserModel({
         email: email,
         firstName: firstName,
@@ -50,7 +49,7 @@ const UserModel = require("../models/userModel");
         })
         .catch(error => {
           console.error('Error creating user:', error.code);
-          return {error: error.code}
+          return error
         });
 }
  const findUserById= (userId) =>  {
