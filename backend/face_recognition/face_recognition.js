@@ -14,9 +14,6 @@ const getFaceImage = (grayImg) => {
     return grayImg.getRegion(faceRects[0]);
 };
 function extractFace(filePath) {
-    if (!cv.xmodules.face) {
-        throw new Error('exiting: opencv4nodejs compiled without face module');
-    }
     // const basePath = './uploads';
     const imgsPath = path.resolve(filePath);
 
@@ -32,18 +29,6 @@ function extractFace(filePath) {
         console.log(faceImage);
     }
 }
-
-
-
-
-// function to encode file data to base64 encoded string
-function base64_encode(file) {
-    // read binary data
-    var bitmap = fs.readFileSync(file);
-    // convert binary data to base64 encoded string
-    return new Buffer.from(bitmap).toString('base64');
-}
-
 
 // function to train ai to recognize faces
 function startTraining() {
@@ -161,6 +146,5 @@ function startReconizing(filePath) {
 // }
 
 module.exports.extractFace = extractFace;
-module.exports.base64_encode = base64_encode;
 module.exports.startTraining = startTraining;
 module.exports.startReconizing = startReconizing;

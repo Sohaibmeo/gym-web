@@ -5,6 +5,7 @@ const gray = src.bgrToGray();
 const pictureName = [ 'Sohaib']
 let faces = [];
 let eyes = [];
+const recognizer = new cv.LBPHFaceRecognizer();
 const faceCascade = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT);
 const eyeCascade = new cv.CascadeClassifier(cv.HAAR_EYE);
 // Detect faces
@@ -32,8 +33,14 @@ for (let i = 0; i < faces.length; ++i) {
           2
           );
         }
-  cv.imwrite(`${pictureName[0]}.png`, roiGray.resize(120,120) );
+  cv.imwrite(`${pictureName[0]}.png`, roiSrc.resize(120,120) );
+  recognizer.train([roiGray.resize(120,120)], [0])
+  cv.imshow('canvasOupput', roiGray.resize(120,120));
 }
+const srcNew = cv.imread('Sohaib.png');
+recognizer.predictAsync(srcNew).then((result) => {
+  console.log(result);
+}).catch((err) => {console.log(err)});
 cv.imshow('canvasOutput', src);
 cv.waitKey();
 cv.destroyAllWindows();
