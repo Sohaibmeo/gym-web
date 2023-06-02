@@ -27,7 +27,7 @@ const addUser = async ({
   dateOfAdmission,
   feeReceivingCheck,
 }, { profilePicturePath }) => {
-  const descriptor = await returnDescriptor(profilePicturePath);
+  const descriptor = await returnDescriptor(profilePicturePath,firstName,lastName);
   const newUser = new UserModel({
     email: email,
     firstName: firstName,
