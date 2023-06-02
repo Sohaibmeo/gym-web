@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     dateOfAdmission: { type: Date, default: Date.now },
     feeReceivingCheck: { type: Boolean, default: false },
     profilePicture: { type: String, default: null },
+    descriptor: {
+      type: [Number],
+      required: true,
+    },
   });
 
 const UserModel = mongoose.model('users', userSchema);

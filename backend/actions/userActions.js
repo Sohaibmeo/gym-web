@@ -1,4 +1,23 @@
+const { createCanvas, loadImage, Canvas, Image, ImageData } = require('canvas');
+const faceapi = require('face-api.js');
+const fs = require('fs');
+const path = require('path');
 const UserModel = require("../models/userModel");
+const { promisify } = require('util');
+
+
+// Load the face detection models
+async function loadModels() {
+  // Configure face-api.js to use the canvas module
+  faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
+  // Specify the path to the face detection models
+  const faceDetectionModelPath = path.resolve(__dirname, '../face_models');
+
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk(faceDetectionModelPath);
+  await faceapi.nets.faceLandmark68Net.loadFromDisk(faceDetectionModelPath);
+  await faceapi.nets.faceRecognitionNet.loadFromDisk(faceDetectionModelPath);
+  await faceapi.nets.faceExpressionNet.loadFromDisk(faceDetectionModelPath);
+}
 
  const getAllUsers= () =>  {
     UserModel.find()
@@ -9,49 +28,64 @@ const UserModel = require("../models/userModel");
       console.error('Error retrieving users:', error);
     });
 }
- const addUser = async({
-    email,
-    firstName,
-    lastName,
-    phoneNumber,
-    gender,blood,
-    admissionFee,
-    monthlyFee,
-    cnic,
-    address,
-    height,
-    weight,
-    dateOfAdmission,
-    feeReceivingCheck,
-},{profilePicture}) => {
-    const newUser = new UserModel({
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        gender: gender,
-        blood: blood,
-        admissionFee: admissionFee,
-        monthlyFee: monthlyFee,
-        cnic: cnic,
-        address: address,
-        height: height ,
-        weight: weight,
-        dateOfAdmission: dateOfAdmission,
-        feeReceivingCheck: feeReceivingCheck,
-        profilePicture: profilePicture,
-      });
-      
-      return await newUser.save()
-        .then(savedUser => {
-          console.log(`New user created: ${savedUser.firstName} ${savedUser.lastName} Email : ${savedUser.email}`);
-          return savedUser
-        })
-        .catch(error => {
-          console.error('Error creating user:', error.code);
-          return error
-        });
+
+const returnDescriptor = async(profilePicturePath) => {
+  await loadModels();
+  // Load an image for face recognition
+  const image = await loadImage(profilePicturePath);
+  // Detect faces in the image
+  const detections = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptor();
+
+  return Array.from(detections.descriptor);
 }
+const addUser = async ({
+  email,
+  firstName,
+  lastName,
+  phoneNumber,
+  gender,
+  blood,
+  admissionFee,
+  monthlyFee,
+  cnic,
+  address,
+  height,
+  weight,
+  dateOfAdmission,
+  feeReceivingCheck,
+}, { profilePicturePath }) => {
+  const descriptor = await returnDescriptor(profilePicturePath);
+  const newUser = new UserModel({
+    email: email,
+    firstName: firstName,
+    lastName: lastName,
+    phoneNumber: phoneNumber,
+    gender: gender,
+    blood: blood,
+    admissionFee: admissionFee,
+    monthlyFee: monthlyFee,
+    cnic: cnic,
+    address: address,
+    height: height,
+    weight: weight,
+    dateOfAdmission: dateOfAdmission,
+    feeReceivingCheck: feeReceivingCheck,
+    profilePicture: profilePicturePath,
+    descriptor: descriptor,
+  });
+
+  console.log(newUser);
+  
+  try {
+    const savedUser = await newUser.save();
+    console.log(`New user created: ${savedUser.firstName} ${savedUser.lastName} Email : ${savedUser.email}`);
+    return savedUser;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    return { error: error.message };
+  }
+};
+
  const findUserById= (userId) =>  {
     UserModel.findById(userId)
   .then(user => {

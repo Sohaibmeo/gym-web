@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/userModel');
-const { addUser, getAllUsers, InitiateDummyDataUser } = require('../actions/userActions');
+const { addUser, getAllUsers } = require('../actions/userActions');
 var multer = require('multer');
-// const fs = require('fs')
+const fs = require('fs')
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads')
@@ -53,10 +53,9 @@ router.post('/addUser',upload.single('profilePicture'), async (req, res) => {
       res.json({ error: "Got a request to store empty Data" });
     }
     else {
-      // const imageBuffer = fs.readFileSync(req.file.path);
-      const imageBuffer = req.file.path
-      const user = await addUser(req.body,{profilePicture: imageBuffer});
-      if (!user.error){
+      const imagePath = req.file.path
+      const user = await addUser(req.body,{profilePicturePath: imagePath});
+      if (!user.error && user ){
         console.log("Passing User Data back to front end")
         user._id = user._id.toString(); // Convert ObjectId to string
         res.json(user);
@@ -70,15 +69,5 @@ router.post('/addUser',upload.single('profilePicture'), async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
-
-router.post('/addUserDummy', async (req, res) => {
-    try {
-      const user = InitiateDummyDataUser();
-      res.json(user);
-    } catch (error) {
-      console.error("This mah error nigga",error);
-      res.status(500).json({ message: 'Server Error' });
-    }
-  });
 
 module.exports = router;

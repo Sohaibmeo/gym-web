@@ -52,7 +52,7 @@ const videoConstraints = {
         }
 
         const response = await axios.post('http://localhost:8000/api/users/addUser', formData);
-    
+
         if (response.status === 200) {
           console.log('User added:', response.data);
           toast.success("User Added Succesfully!")
@@ -64,6 +64,7 @@ const videoConstraints = {
       } catch (error) {
         console.log(error)
         console.error('Error adding user:', error);
+        toast.error("Error adding User")
         // Handle error response as needed
       }
     },
