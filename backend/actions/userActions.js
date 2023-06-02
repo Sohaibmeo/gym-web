@@ -1,23 +1,5 @@
-const { createCanvas, loadImage, Canvas, Image, ImageData } = require('canvas');
-const faceapi = require('face-api.js');
-const fs = require('fs');
-const path = require('path');
 const UserModel = require("../models/userModel");
-const { promisify } = require('util');
-
-
-// Load the face detection models
-async function loadModels() {
-  // Configure face-api.js to use the canvas module
-  faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
-  // Specify the path to the face detection models
-  const faceDetectionModelPath = path.resolve(__dirname, '../face_models');
-
-  await faceapi.nets.ssdMobilenetv1.loadFromDisk(faceDetectionModelPath);
-  await faceapi.nets.faceLandmark68Net.loadFromDisk(faceDetectionModelPath);
-  await faceapi.nets.faceRecognitionNet.loadFromDisk(faceDetectionModelPath);
-  await faceapi.nets.faceExpressionNet.loadFromDisk(faceDetectionModelPath);
-}
+const returnDescriptor = require("../face_recognition")
 
  const getAllUsers= () =>  {
     UserModel.find()
@@ -29,15 +11,6 @@ async function loadModels() {
     });
 }
 
-const returnDescriptor = async(profilePicturePath) => {
-  await loadModels();
-  // Load an image for face recognition
-  const image = await loadImage(profilePicturePath);
-  // Detect faces in the image
-  const detections = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptor();
-
-  return Array.from(detections.descriptor);
-}
 const addUser = async ({
   email,
   firstName,
@@ -71,11 +44,9 @@ const addUser = async ({
     dateOfAdmission: dateOfAdmission,
     feeReceivingCheck: feeReceivingCheck,
     profilePicture: profilePicturePath,
-    descriptor: descriptor,
+    descriptor: descriptor?.length > 0 ? descriptor : null,
   });
 
-  console.log(newUser);
-  
   try {
     const savedUser = await newUser.save();
     console.log(`New user created: ${savedUser.firstName} ${savedUser.lastName} Email : ${savedUser.email}`);
