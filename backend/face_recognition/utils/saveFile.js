@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const baseDir = path.resolve(__dirname, '../detectedFaces')
+const baseDir = path.resolve(__dirname, '../../detectedFaces')
 
 function saveFile(fileName, buf) {
   if (!fs.existsSync(baseDir)) {

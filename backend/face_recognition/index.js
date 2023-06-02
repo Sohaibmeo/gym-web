@@ -30,7 +30,7 @@ const returnDescriptor = async(profilePicturePath,firstName,lastName) => {
   const outRef = faceapi.createCanvasFromMedia(image)
   refDrawBoxes.draw(outRef)
 
-  saveFile('AlteredImage.jpg', (outRef).toBuffer('image/jpeg'))
+  saveFile(`${firstName} ${lastName}.jpg`, (outRef).toBuffer('image/jpeg'))
 
   return Array.from(detections.descriptor);
 }
