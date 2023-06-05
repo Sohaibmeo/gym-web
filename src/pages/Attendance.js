@@ -1,15 +1,18 @@
-import React from 'react';
+import React,{useEffect, useRef, useState} from 'react';
 import Webcam from 'react-webcam';
 import * as faceapi from 'face-api.js';
+import { Box } from '@mui/material';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 function App() {
-  const [modelsLoaded, setModelsLoaded] = React.useState(false);
-  const [videoLoaded, setVideoLoaded] = React.useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const videoWidth = 640;
   const videoHeight = 480;
-  const canvasRef = React.useRef();
+  const canvasRef = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = process.env.PUBLIC_URL + '/models';
       await Promise.all([
@@ -48,14 +51,39 @@ function App() {
         faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
         faceapi.draw.drawFaceExpressions(canvasRef.current, resizedDetections);
       }, 100);
+      setInterval(async ()=>{
+        const result =   await faceapi
+        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+        if(result){
+          try{
+           const body = JSON.stringify(result.descriptor)
+           toast.success("Someone Detected");
+           console.log(result.descriptor)
+           const response = await axios.post('http://localhost:8000/api/users/compareDescriptor', body)
+           if(response.status === 200){
+            console.log(response.data)
+           }else{
+            console.error("Its all fucked")
+           }
+        }catch(error) {
+          console.error("Another error",error)
+        }
+
+        }else{
+          toast.error("No One Detected")
+        }
+      }, 10000)
     }
   };
 
   return (
-    <div>
+    <Box>
       {modelsLoaded ? (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+          <Box>
+            <Box style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
               <Webcam
                 id="video"
                 onUserMedia={() => setVideoLoaded(true)}
@@ -64,13 +92,17 @@ function App() {
                 onPlay={handleVideoOnPlay}
                 style={{ borderRadius: '10px' }}
               />
-              <canvas ref={canvasRef} style={{ position: 'absolute' }} />
-            </div>
-          </div>
+              <Box
+                component="canvas"
+                ref={canvasRef}
+                style={{ position: 'absolute' }}
+              />
+            </Box>
+          </Box>
         ) : (
-          <div>Loading models...</div>
+          <Box>Loading models...</Box>
         )}
-    </div>
+    </Box>
   );
 }
 

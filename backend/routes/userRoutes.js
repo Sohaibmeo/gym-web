@@ -4,7 +4,7 @@ const router = express.Router();
 const UserModel = require('../models/userModel');
 const { addUser, getAllUsers } = require('../actions/userActions');
 var multer = require('multer');
-const fs = require('fs')
+
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads')
@@ -64,6 +64,18 @@ router.post('/addUser',upload.single('profilePicture'), async (req, res) => {
         res.status(500).json({ message: user.error });
       }
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+router.post('/compareDescriptor', async (req, res) => {
+  try {
+    console.log("This is requested", req.body);
+    const users = await getAllUsers(); // Replace with your function to retrieve users
+    console.log("Users function returns : ",users)
+    res.json({Result: users});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

@@ -1,14 +1,8 @@
 const UserModel = require("../models/userModel");
 const returnDescriptor = require("../face_recognition")
 
- const getAllUsers= () =>  {
-    UserModel.find()
-    .then(users => {
-      console.log('All users:', users);
-    })
-    .catch(error => {
-      console.error('Error retrieving users:', error);
-    });
+ const getAllUsers= async() =>  {
+    return await UserModel.find()
 }
 
 const addUser = async ({
@@ -91,37 +85,7 @@ const addUser = async ({
     });
 }
 
-const InitiateDummyDataUser= () =>  {
-    const newUser = new UserModel({
-        email: 'foobar@gmail.com',
-        firstName: 'Sohaib',
-        lastName: 'Meo',
-        phoneNumber: '00923044482556',
-        gender: 'M',
-        blood: 'None',
-        admissionFee: 5000,
-        monthlyFee: 4000,
-        cnic: 4220127714315,
-        address: '410 A1 Johar Town, Lahore',
-        height: 175,
-        weight: 100,
-        dateOfAdmission: new Date(),
-        feeReceivingCheck: false,
-        profilePicture: '',
-      });
-      
-      newUser.save()
-        .then(savedUser => {
-          console.log('New user created:', savedUser);
-        })
-        .catch(error => {
-          console.error('Error creating user:', error);
-        });
-      
-}
-
 module.exports = {
-  InitiateDummyDataUser,
   addUser,
   getAllUsers,
   findUserById,
