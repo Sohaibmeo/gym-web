@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-function App() {
+function Announcement() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoWidth = 640;
@@ -59,12 +59,12 @@ function App() {
 
         if(result){
           try{
-           const body = JSON.stringify(result.descriptor)
-           toast.success("Someone Detected");
-           console.log(result.descriptor)
+           const body = { data: result.descriptor };
+           toast.info("Someone Detected");
            const response = await axios.post('http://localhost:8000/api/users/compareDescriptor', body)
            if(response.status === 200){
-            console.log(response.data)
+             console.log("Response from backend : ",response.data)
+             toast.success("Someone Matched")
            }else{
             console.error("Its all fucked")
            }
@@ -106,4 +106,4 @@ function App() {
   );
 }
 
-export default App;
+export default Announcement;

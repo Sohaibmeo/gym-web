@@ -35,4 +35,22 @@ const returnDescriptor = async(profilePicturePath,firstName,lastName) => {
   return Array.from(detections.descriptor);
 }
 
-module.exports = returnDescriptor;
+const recognizeFace = async (receivedDescriptor, storedDescriptors, users) => {
+  const labeledDescriptors = storedDescriptors.map((descriptor, index) => {
+    console.log("Descriptor Length:", descriptor.length);
+    console.log("User:", users[index].firstName);
+    return new faceapi.LabeledFaceDescriptors(users[index].firstName.toString(), [new Float32Array(descriptor)]);
+  });
+  const receivedDescriptorArray = new Float32Array(Object.values(receivedDescriptor));
+  console.log("2nd Descriptor Length:", receivedDescriptorArray.length)
+  if(receivedDescriptorArray.length === 128){
+    const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors);
+    const bestMatch = faceMatcher.findBestMatch(receivedDescriptorArray);
+    const matchedUserFirstName = bestMatch.label;
+    return matchedUserFirstName;
+  }else{
+    return "No Face Detected"
+  }
+};
+
+module.exports = {returnDescriptor,recognizeFace};

@@ -4,6 +4,7 @@ const router = express.Router();
 const UserModel = require('../models/userModel');
 const { addUser, getAllUsers } = require('../actions/userActions');
 var multer = require('multer');
+const { recognizeFace } = require('../face_recognition');
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -72,10 +73,15 @@ router.post('/addUser',upload.single('profilePicture'), async (req, res) => {
 
 router.post('/compareDescriptor', async (req, res) => {
   try {
-    console.log("This is requested", req.body);
     const users = await getAllUsers(); // Replace with your function to retrieve users
-    console.log("Users function returns : ",users)
-    res.json({Result: users});
+    if(users && req.body.data){
+      const storedDescriptors = users.map(user => user.descriptor);
+      const response = await recognizeFace(req.body.data,storedDescriptors,users);
+      console.log("User recognized to be : ", response)
+      res.json(response);
+    }else{
+      console.log("No user in database")
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
