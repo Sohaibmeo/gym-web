@@ -1,5 +1,5 @@
 const UserModel = require("../models/userModel");
-const returnDescriptor = require("../face_recognition")
+const { returnDescriptor } = require("../face_recognition")
 
  const getAllUsers= async() =>  {
     return await UserModel.find()
