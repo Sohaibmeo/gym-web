@@ -49,7 +49,8 @@ const recognizeFace = async (receivedDescriptor, storedDescriptors, users) => {
     const matchedUserFirstName = bestMatch.label;
     return matchedUserFirstName;
   }else{
-    return "No Face Detected"
+    console.error('Error creating user:', "Unmatched Descriptors");
+    return {error: 'Descriptor Size MisMatch'}
   }
 };
 

@@ -60,11 +60,11 @@ function Announcement() {
         if(result){
           try{
            const body = { data: result.descriptor };
-           toast.info("Someone Detected");
            const response = await axios.post('http://localhost:8000/api/users/compareDescriptor', body)
            if(response.status === 200){
-             console.log("Response from backend : ",response.data)
-             toast.success("Someone Matched")
+             if (!response.data.error){
+               toast.success(`Welcome ${response.data}`)
+             }
            }else{
             console.error("Its all fucked")
            }
