@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-function Announcement() {
+function Attendance() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoWidth = 640;
@@ -106,4 +106,4 @@ function Announcement() {
   );
 }
 
-export default Announcement;
+export default Attendance;

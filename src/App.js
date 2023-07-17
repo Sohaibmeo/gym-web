@@ -5,20 +5,37 @@ import AddMember from "./pages/AddMember";
 import Home from "./pages/Home";
 import Announcement from "./pages/Announcement";
 import Attendance from "./pages/Attendance";
+import Login from "./pages/Login";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLogin = (token) => {
+    // Store the token in client-side storage (e.g., localStorage)
+    localStorage.setItem('token', token);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    // Clear the token from client-side storage
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
+
   return (
     <Router>
       <LocalizationProvider dateAdapter={AdapterDateFns} timezone="Asia/Kolkata">
-        <Navbar />
+        <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <Routes>
-          <Route exact path="/" Component={Home} />
-          <Route path="/announcement" Component={Announcement} />
-          <Route path="/addmember" Component={AddMember} />
-          <Route path="/attendance" Component={Attendance} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route exact path="/" element={<Home />} />
+          <Route path="/announcement" element={<Announcement />} />
+          <Route path="/addmember" element={<AddMember />} />
+          <Route path="/attendance" element={<Attendance />} />
         </Routes>
         <ToastContainer 
           position="top-center"
@@ -33,7 +50,7 @@ function App() {
           theme="dark"
         />
       </LocalizationProvider>
-    </Router>     
+    </Router>
   );
 }
 
